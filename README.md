@@ -1,1 +1,156 @@
-Add hompage html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Clone Prototype</title>
+    <style>
+        /* Reset margins and hide scrollbars */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        /* Full-screen scroll container with vertical snapping */
+        .app__videos {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        .app__videos::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        /* Individual video card configuration */
+        .video {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            background-color: #000;
+            scroll-snap-align: start;
+        }
+        .video__player {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        /* Sidebar overlay controls (Like, Comment, Share) */
+        .video__sidebar {
+            position: absolute;
+            right: 15px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+        .sidebar__button {
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .sidebar__button span {
+            font-size: 24px;
+            display: block;
+        }
+        .sidebar__button p {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        /* Bottom description text overlay */
+        .video__footer {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            color: white;
+            max-width: 70%;
+        }
+        .video__footer h3 {
+            padding-bottom: 8px;
+            font-size: 16px;
+        }
+        .video__footer p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app__videos" id="videoContainer">
+        <!-- Video Card 1 -->
+        <div class="video">
+            <video class="video__player" loop src="mixkit.co"></video>
+            <div class="video__sidebar">
+                <div class="sidebar__button"><span>❤️</span><p>12K</p></div>
+                <div class="sidebar__button"><span>💬</span><p>340</p></div>
+                <div class="sidebar__button"><span>🔗</span><p>Share</p></div>
+            </div>
+            <div class="video__footer">
+                <h3>@nature_explorer</h3>
+                <p>Beautiful yellow flowers blooming in spring! 🌸 #nature #spring</p>
+            </div>
+        </div>
+
+        <!-- Video Card 2 -->
+        <div class="video">
+            <video class="video__player" loop src="mixkit.co"></video>
+            <div class="video__sidebar">
+                <div class="sidebar__button"><span>❤️</span><p>45K</p></div>
+                <div class="sidebar__button"><span>💬</span><p>890</p></div>
+                <div class="sidebar__button"><span>🔗</span><p>Share</p></div>
+            </div>
+            <div class="video__footer">
+                <h3>@ocean_vibes</h3>
+                <p>Amazing drone shot of ocean waves. 🌊 #ocean #travel</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Select all video elements
+        const videos = document.querySelectorAll('.video__player');
+
+        // Play/Pause video on direct click
+        videos.forEach(video => {
+            video.addEventListener('click', () => {
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+        });
+
+        // Intersection Observer to handle auto-play on scroll
+        const observerOptions = {
+            root: document.getElementById('videoContainer'),
+            threshold: 0.6 // Video must be 60% visible to trigger play
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(error => {
+                        console.log("Autoplay blocked until user interaction.");
+                    });
+                } else {
+                    video.pause();
+                    video.currentTime = 0; // Reset video position
+                }
+            });
+        }, observerOptions);
+
+        // Attach observer to each video
+        videos.forEach(video => observer.observe(video));
+    </script>
+</body>
+</html>Add hompage html
